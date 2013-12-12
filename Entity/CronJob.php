@@ -4,55 +4,63 @@ namespace ColourStream\Bundle\CronBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="cron_jobs")
  * @ORM\Entity(repositoryClass="ColourStream\Bundle\CronBundle\Entity\CronJobRepository")
  */
 class CronJob
 {
+
     /**
+     * @var integer $id
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var integer $id
      */
     protected $id;
     
     /**
-     * @ORM\Column
+     * @ORM\Column(name="command", unique=true)
      * @var string $command
      */
     protected $command;
+
     /**
-     * @ORM\Column
      * @var string $description
+     * @ORM\Column(name="description", type="string")
      */
     protected $description;
     
     /**
-     * @ORM\Column(name="job_interval", type="string", length=40)
      * @var string $interval
+     * @ORM\Column(name="job_interval", type="string", length=40)
      */
     protected $interval;
+
     /**
-     * @ORM\Column(type="datetime")
      * @var DateTime $nextRun
+     * @ORM\Column(name="next_run", type="datetime")
      */
     protected $nextRun;
+
     /**
-     * @ORM\Column(type="boolean")
      * @var boolean $enabled
+     * @ORM\Column(name="enabled", type="boolean")
      */
     protected $enabled;
     
     /**
-     * @ORM\OneToMany(targetEntity="CronJobResult", mappedBy="job", cascade={"remove"})
      * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="CronJobResult", mappedBy="job", cascade={"remove", "persist"})
      */
     protected $results;
+
     /**
-     * @ORM\OneToOne(targetEntity="CronJobResult")
      * @var CronJobResult
+     * @ORM\OneToOne(targetEntity="CronJobResult", cascade={"remove", "persist"})
+     * @ORM\JoinColumn(name="most_recent_run_id", referencedColumnName="id", onDelete="cascade")
      */
     protected $mostRecentRun;
+
     public function __construct()
     {
         $this->results = new \Doctrine\Common\Collections\ArrayCollection();
@@ -207,4 +215,5 @@ class CronJob
     {
         return $this->enabled;
     }
+
 }
