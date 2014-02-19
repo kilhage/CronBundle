@@ -4,6 +4,7 @@ namespace ColourStream\Bundle\CronBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="cron_job_results")
  * @ORM\Entity(repositoryClass="ColourStream\Bundle\CronBundle\Entity\CronJobResultRepository")
  */
 class CronJobResult
@@ -15,38 +16,41 @@ class CronJobResult
     const RESULT_MAX = 2;
     
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      * @var integer $id
+     * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
+
     /**
-     * @ORM\Column(type="datetime")
      * @var DateTime $runAt
+     * @ORM\Column(name="run_at", type="datetime")
      */
     protected $runAt;
+
     /**
-     * @ORM\Column(type="float")
      * @var float $runTime
+     * @ORM\Column(name="run_time", type="float")
      */
     protected $runTime;
-    
+
     /**
-     * @ORM\Column(type="integer")
      * @var integer $result
+     * @ORM\Column(name="result", type="integer")
      */
     protected $result;
+
     /**
-     * @ORM\Column(type="text")
      * @var string $output
+     * @ORM\Column(name="output", type="text")
      */
     protected $output;
-    
+
     /**
-     * @ORM\ManyToOne(targetEntity="CronJob", inversedBy="results")
      * @var CronJob
+     * @ORM\ManyToOne(targetEntity="CronJob", inversedBy="results", cascade={"persist"})
+     * @ORM\JoinColumn(name="job_id", referencedColumnName="id", onDelete="cascade")
      */
     protected $job;
 
@@ -164,4 +168,5 @@ class CronJobResult
     {
         return $this->job;
     }
+
 }
